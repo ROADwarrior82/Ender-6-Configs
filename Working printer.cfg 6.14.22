@@ -1,0 +1,325 @@
+# This file contains common pin mappings for the BigTreeTech SKR 2 & Ender 6.
+# To use this config, the firmware should be compiled for the
+# STM32F407 with a "32KiB bootloader".
+
+# The "make flash" command does not work on the SKR 2. Instead,
+# after running "make", copy the generated "out/klipper.bin" file to a
+# file named "firmware.bin" on an SD card and then restart the SKR 2
+# with that SD card.
+
+# See docs/Config_Reference.md for a description of parameters.
+
+# Note: The initial revision of this board has a flaw that can cause
+# damage to itself and other boards. Be sure to verify the board is
+# not impacted by this flaw before using it.
+
+[stepper_x]
+step_pin: PD5
+dir_pin: !PD4
+enable_pin: !PD6
+microsteps: 16
+rotation_distance: 40
+endstop_pin: ^PC1
+position_endstop: 267
+position_max: 267
+position_min: 0
+homing_speed: 50
+
+[stepper_y]
+step_pin: PE2
+dir_pin: !PE1
+enable_pin: !PE3
+microsteps: 16
+rotation_distance: 40
+endstop_pin: ^PC3
+position_endstop: 247
+position_max: 247
+Position_min: 0
+homing_speed: 50
+
+[stepper_z]
+step_pin: PA15
+dir_pin: !PA8
+enable_pin: !PD1
+microsteps: 16
+rotation_distance: 8
+# position_endstop: 0.0                     # disable to use BLTouch
+# endstop_pin: ^PA7                         # disable to use BLTouch
+endstop_pin: probe:z_virtual_endstop    # enable to use BLTouch
+position_min: -10                      # enable to use BLTouch
+position_max: 400
+
+[safe_z_home]                           # enable for BLTouch
+home_xy_position: 136, 129.5
+speed: 100
+z_hop: 10
+z_hop_speed: 5
+
+[bltouch]                               # enable for BLTouch
+sensor_pin: ^PE4
+control_pin: PE5
+x_offset: -34.2
+y_offset: 0
+#z_offset: 2.04
+samples : 2
+speed: 3.0
+
+[bed_mesh]                              # enable for BLTouch
+speed: 100
+mesh_min: 10, 10
+mesh_max: 232.8, 247
+algorithm: bicubic
+probe_count: 6,6
+
+[extruder]
+max_extrude_only_distance: 1000.0
+step_pin: PD15
+dir_pin: PD14
+enable_pin: !PC7
+microsteps: 16
+rotation_distance: 3.4334
+nozzle_diameter: 0.600
+filament_diameter: 1.750
+heater_pin: PB3
+sensor_type: EPCOS 100K B57560G104F
+sensor_pin: PA2
+#control: pid
+#pid_Kp: 26.949
+#pid_Ki: 1.497
+#pid_Kd: 121.269
+min_temp: 0
+max_temp: 275
+pressure_advance = .01
+# PLA .06
+#quantum 0.0225
+#ABS .025
+#.6 ABS .01
+[heater_bed]
+heater_pin: PD7
+sensor_type: EPCOS 100K B57560G104F
+sensor_pin: PA1
+#control: pid
+#pid_Kp: 327.11
+#pid_Ki: 19.20
+#pid_Kd: 1393.45
+min_temp: 0
+max_temp: 110
+
+[heater_fan extruder_fan]
+pin: PB7
+heater: extruder
+heater_temp: 50.0
+fan_speed: 1.0
+
+# Part cooling fan
+[fan]
+pin: PB6
+
+[heater_fan mcu]
+pin: PB5
+
+[filament_switch_sensor e0_sensor]
+switch_pin: PC2
+pause_on_runout: True
+
+#[filament_motion_sensor encoder_sensor]
+#detection_length: 10
+#   The minimum length of filament pulled through the sensor to trigger
+ #  a state change on the switch_pin
+#   Default is 7 mm.
+#extruder: extruder
+#   The name of the extruder section this sensor is associated with.
+#   This parameter must be provided.
+#switch_pin: PC2
+# changing the switch_pin name according to your motherboard
+#pause_on_runout: True
+#runout_gcode:
+#insert_gcode:
+#event_delay:
+#pause_delay:
+
+[output_pin motor_power]
+pin: PC13
+value: 1
+
+[mcu]
+serial: /dev/serial/by-id/usb-Klipper_stm32f407xx_36001B001151303239383034-if00
+restart_method: command
+
+[temperature_sensor Chamber]
+sensor_type:EPCOS 100K B57560G104F
+#   One of "EPCOS 100K B57560G104F", "ATC Semitec 104GT-2",
+#   "ATC Semitec 104NT-4-R025H42G", "Generic 3950",
+#   "Honeywell 100K 135-104LAG-J01", "NTC 100K MGB18-104F39050L32",
+#   "SliceEngineering 450", or "TDK NTCG104LH104JT1"
+sensor_pin: PA3
+#   Analog input pin connected to the thermistor. This parameter must
+#   be provided.
+#pullup_resistor: 4700
+#   The resistance (in ohms) of the pullup attached to the thermistor.
+#   The default is 4700 ohms.
+#inline_resistor: 0
+#   The resistance (in ohms) of an extra (not heat varying) resistor
+#   that is placed inline with the thermistor. It is rare to set this.
+#   The default is 0 ohms.
+max_temp: 100
+
+[printer]
+kinematics: corexy
+max_velocity: 300
+max_accel: 2500
+max_accel_to_decel: 2500
+max_z_velocity: 10
+max_z_accel: 100
+
+
+[virtual_sdcard]
+path: ~/gcode_files
+
+[display_status]
+
+[pause_resume]
+
+[respond]
+default_type: command 
+
+[include timelapse.cfg]
+
+[include macro.cfg]
+
+[screws_tilt_adjust]
+screw1: 83, 36.5
+screw1_name: front left screw
+screw2: 267, 36.5
+screw2_name: front right screw
+screw3: 267, 227.5
+screw3_name: rear right screw
+screw4: 83, 227.5
+screw4_name: rear left screw
+horizontal_move_z: 10.
+speed: 50.
+screw_thread: CW-M4
+
+[gcode_macro TOGGLE_LEDLIGHTS]
+gcode:
+  SET_PIN PIN=LEDlights VALUE={(not printer['output_pin LEDlights'].value)|int}
+
+[respond]
+default_type: command 
+
+###########Thermals############
+
+[temperature_sensor raspberry_pi]
+##Pi Temps
+sensor_type: temperature_host
+max_temp: 100
+
+[temperature_sensor mcu_temp]
+##Spider Temps
+sensor_type: temperature_mcu
+max_temp: 100
+
+[input_shaper]
+#shaper_freq_x: 93.6
+#shaper_type_x: mzv
+#shaper_freq_y: 58.8
+#shaper_type_y: mzv
+
+[mcu rpi]
+serial: /tmp/klipper_host_mcu
+
+[adxl345]
+cs_pin: rpi:None
+axes_map: -y, x, z # remaps axis to account for sideways position.
+
+[resonance_tester]
+accel_chip: adxl345
+probe_points:
+    100, 100, 20  # an example
+
+[gcode_macro _bot_data]
+variable_lapse_video_size: 0
+variable_lapse_filename: 'None'
+variable_lapse_path: 'None'
+gcode:
+    M118 Setting bot lapse variables
+
+[board_pins]
+aliases:
+    # EXP1 header
+    EXP1_1=PC5, EXP1_3=PB1, EXP1_5=PE10, EXP1_7=PE12, EXP1_9=<GND>,
+    EXP1_2=PB0, EXP1_4=PE9, EXP1_6=PE11, EXP1_8=PE13, EXP1_10=<5V>,
+    # EXP2 header
+    EXP2_1=PA6, EXP2_3=PE7, EXP2_5=PB2, EXP2_7=PC4,   EXP2_9=<GND>,
+    EXP2_2=PA5, EXP2_4=PA4, EXP2_6=PA7, EXP2_8=<RST>, EXP2_10=<NC>
+	
+[tmc2209 stepper_x]
+uart_pin: PE0
+run_current: 0.8000
+hold_current: 0.800
+diag_pin:
+stealthchop_threshold: 999999
+
+[tmc2209 stepper_y]
+uart_pin: PD3
+run_current: 0.800
+hold_current: 0.800
+diag_pin:
+stealthchop_threshold: 999999
+
+[tmc2209 stepper_z]
+uart_pin: PD0
+run_current: 0.800
+hold_current: 0.800
+diag_pin:
+stealthchop_threshold: 999999
+
+[tmc2209 extruder]
+uart_pin: PC6
+run_current: 0.600
+diag_pin:
+stealthchop_threshold: 999999
+
+#*# <---------------------- SAVE_CONFIG ---------------------->
+#*# DO NOT EDIT THIS BLOCK OR BELOW. The contents are auto-generated.
+#*#
+#*# [heater_bed]
+#*# control = pid
+#*# pid_kp = 68.262
+#*# pid_ki = 0.838
+#*# pid_kd = 1389.983
+#*#
+#*# [extruder]
+#*# control = pid
+#*# pid_kp = 17.246
+#*# pid_ki = 0.642
+#*# pid_kd = 115.761
+#*#
+#*# [bed_mesh default]
+#*# version = 1
+#*# points =
+#*# 	  -0.065000, -0.066250, -0.007500, -0.037500, -0.041250, -0.048750
+#*# 	  -0.031250, -0.027500, 0.012500, -0.041250, -0.042500, 0.005000
+#*# 	  -0.015000, 0.020000, -0.003750, -0.007500, 0.036250, 0.037500
+#*# 	  0.038750, -0.016250, -0.028750, -0.038750, -0.016250, 0.023750
+#*# 	  0.058750, -0.001250, -0.015000, -0.048750, 0.008750, 0.058750
+#*# 	  0.080000, -0.036250, -0.052500, -0.077500, -0.058750, 0.002500
+#*# tension = 0.2
+#*# min_x = 10.0
+#*# algo = bicubic
+#*# y_count = 6
+#*# mesh_y_pps = 2
+#*# min_y = 10.0
+#*# x_count = 6
+#*# max_y = 247.0
+#*# mesh_x_pps = 2
+#*# max_x = 232.8
+#*#
+#*# [bltouch]
+#*# z_offset = 2.569
+#*#
+#*# [input_shaper]
+#*# shaper_type_x = mzv
+#*# shaper_freq_x = 101.8
+#*# shaper_type_y = mzv
+#*# shaper_freq_y = 51.2
