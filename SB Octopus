@@ -1,0 +1,553 @@
+# This file contains common pin mappings for the BigTreeTech Octopus V1 + Ender 6.
+# To use this config, the firmware should be compiled for the
+# STM32F446 with a "32KiB bootloader".
+# Enable "extra low-level configuration options" and select the "12MHz crystal"
+# as clock reference.
+
+# The "make flash" command does not work on the Octopus. Instead,
+# after running "make", copy the generated "out/klipper.bin" file to a
+# file named "firmware.bin" on an SD card and then restart the Octopus
+# with that SD card.
+
+# See docs/Config_Reference.md for a description of parameters.
+
+[stepper_x]
+step_pin: PF13
+dir_pin: PF12
+enable_pin: !PF14
+rotation_distance: 40
+microsteps: 32
+full_steps_per_rotation:200
+rotation_distance: 40
+# DIAG0
+endstop_pin: PG9
+position_endstop: 270
+position_max: 270
+position_min:-10
+homing_speed: 50
+
+[stepper_y]
+step_pin: PG0
+dir_pin: PG1
+enable_pin: !PF15
+rotation_distance: 40
+microsteps: 32
+full_steps_per_rotation:200
+# DIAG1
+endstop_pin: PG6
+position_endstop: 270
+position_max: 270
+#poistion_min: -10
+homing_speed: 50
+
+[stepper_z]
+# MOTOR2
+step_pin: PF11
+dir_pin: !PG3
+enable_pin: !PG5
+microsteps: 16
+rotation_distance: 8
+# Enable to use BLTouch
+endstop_pin: probe:z_virtual_endstop
+# Enable to use BLTouch
+position_min: -10
+position_max: 400
+homing_retract_dist: 0
+
+[extruder]
+# MOTOR3
+step_pin: PG4
+dir_pin: !PC1
+enable_pin: !PA0
+# HE0
+heater_pin: PA2
+# T0
+sensor_pin:  PF4
+microsteps: 32
+full_steps_per_rotation: 200
+rotation_distance: 22.6789511
+gear_ratio: 50:10
+nozzle_diameter: 0.400
+filament_diameter: 1.750
+sensor_type: ATC Semitec 104NT-4-R025H42G
+#control: pid
+#pid_Kp=33.401
+#pid_Ki=3.479
+#pid_Kd=80.163
+min_temp: 0
+max_temp: 300
+max_extrude_only_distance: 1000.0
+#control: pid
+#pid_Kp: 26.949
+#pid_Ki: 1.497
+#pid_Kd: 121.269
+min_temp: 0
+max_temp: 300
+pressure_advance = .025
+pressure_advance_smooth_time = .04
+
+#[extruder1] # MOTOR4
+#step_pin: PF9
+#dir_pin: PF10
+#enable_pin: !PG2
+#heater_pin: PA3 # HE1
+#sensor_pin: PF5 #T1
+#...
+
+#[extruder2] # MOTOR5
+#step_pin: PC13
+#dir_pin: PF0
+#enable_pin: !PF1
+#heater_pin: PB10 # HE2
+#sensor_pin: PF6 #T2
+#...
+
+#[extruder3] # MOTOR6
+#step_pin: PE2
+#dir_pin: PE3
+#enable_pin: !PD4
+#heater_pin: PB11 # HE3
+#sensor_pin: PF7 #T3
+#...
+
+#[extruder4] # MOTOR7
+#step_pin: PE6
+#dir_pin: PA14
+#enable_pin: !PE0
+#...
+
+[filament_switch_sensor e0_sensor]
+switch_pin: PG12
+pause_on_runout: True
+
+#[filament_motion_sensor encoder_sensor]
+#detection_length: 20
+#   The minimum length of filament pulled through the sensor to trigger
+ #  a state change on the switch_pin
+#   Default is 7 mm.
+#extruder: extruder
+#   The name of the extruder section this sensor is associated with.
+#   This parameter must be provided.
+#switch_pin: PC2
+# changing the switch_pin name according to your motherboard
+#pause_on_runout: True
+#runout_gcode:
+#insert_gcode:
+#event_delay:
+#pause_delay:
+
+#[output_pin motor_power]
+#pin: PC13
+#value: 1
+
+[heater_bed]
+# BED_OUT
+heater_pin: PA3
+# TB
+sensor_pin: PF3
+sensor_type: EPCOS 100K B57560G104F
+#control: pid
+#pid_Kp: 327.11
+#pid_Ki: 19.20
+#pid_Kd: 1393.45
+min_temp: 0
+max_temp: 120
+
+[heater_fan hotend_fan]
+##  Hotend Fan - FAN1
+pin: PE5
+max_power: 1.0
+kick_start_time: 0.5
+heater: extruder
+heater_temp: 50.0
+##  If you are experiencing back flow, you can reduce fan_speed
+#fan_speed: 1.0
+
+# Part cooling fan
+[fan]
+##  Print Cooling Fan - FAN0
+pin: PA8
+kick_start_time: 0.5
+##  Depending on your fan, you may need to increase this value
+##  if your fan will not start. Can change cycle_time (increase)
+##  if your fan is not able to slow down effectively
+off_below: 0.10
+
+[controller_fan motherboard_fan]
+# FAN2
+pin: PD12
+kick_start_time: 0.5
+heater: heater_bed
+
+[controller_fan PI_fan]
+pin: PD13 # FAN3
+max_power: 1.0
+shutdown_speed: 0.0
+kick_start_time: 5.0
+heater: heater_bed
+#heater_temp: 60
+fan_speed: 1.0
+
+[controller_fan exaust_fan]
+pin: PD14 # FAN4
+max_power: 1.0
+shutdown_speed: 0.0
+kick_start_time: 5.0
+heater: heater_bed
+#heater_temp: 60
+fan_speed: 1.0
+
+#[fan fan5]
+#pin: PD15 # FAN5
+
+[temperature_sensor Octopus v1.1]
+sensor_type: temperature_mcu
+
+[temperature_sensor raspberry_pi]
+sensor_type: temperature_host
+
+[temperature_sensor Chamber]
+sensor_type:EPCOS 100K B57560G104F
+#   One of "EPCOS 100K B57560G104F", "ATC Semitec 104GT-2",
+#   "ATC Semitec 104NT-4-R025H42G", "Generic 3950",
+#   "Honeywell 100K 135-104LAG-J01", "NTC 100K MGB18-104F39050L32",
+#   "SliceEngineering 450", or "TDK NTCG104LH104JT1"
+sensor_pin: PF5
+#   Analog input pin connected to the thermistor. This parameter must
+#   be provided.
+#pullup_resistor: 4700
+#   The resistance (in ohms) of the pullup attached to the thermistor.
+#   The default is 4700 ohms.
+#inline_resistor: 0
+#   The resistance (in ohms) of an extra (not heat varying) resistor
+#   that is placed inline with the thermistor. It is rare to set this.
+#   The default is 0 ohms.
+#max_temp: 100
+
+[mcu]
+serial: /dev/serial/by-id/usb-Klipper_stm32f446xx_080020000350534E4E313020-if00
+
+
+[printer]
+kinematics: corexy
+max_velocity: 300
+max_accel: 2500
+max_accel_to_decel: 2500
+max_z_velocity: 10
+max_z_accel: 100
+
+# [adxl345]
+# cs_pin: rpi:None
+
+# [resonance_tester]
+# accel_chip: adxl345
+# probe_points:
+# 100,100,20 # an example
+
+[screws_tilt_adjust]
+screw1: 23.65, 18.25
+screw1_name: front left screw
+screw2: 213.65, 18.25
+screw2_name: front right screw
+screw3: 213.65, 208
+screw3_name: rear right screw
+screw4: 23.65, 208
+screw4_name: rear left screw
+horizontal_move_z: 10.
+speed: 50.
+screw_thread: CW-M3
+
+[neopixel sb_leds]
+pin: PB0
+# The pin connected to the neopixel. This parameter must be provided. chain_count: 10 # 8 Rainbow barf + 2 Toolhead 
+# The number of Neopixel chips that are "daisy chained" to the # provided pin. The default is 1 (which indicates only a single 
+# Neopixel is connected to the pin). 
+chain_count: 10
+color_order: GRB,GRB,GRB,GRB,GRB,GRB,GRB,GRB,GRBW,GRBW 
+# Set the pixel order required by the LED hardware. Options are GRB, 
+# RGB, GRBW, or RGBW. The default is GRB. 
+initial_RED: 0.0 
+initial_GREEN: 0.0 
+initial_BLUE: 1.0 
+initial_WHITE: 0.0 
+# Sets the initial LED color of the Neopixel. Each value should be 
+# between 0.0 and 1.0. The WHITE option is only available on RGBW 
+# LEDs. The default for each color is 0.#
+
+# Most configuration for the macros can be done by modifying the variables in the _sb_vars macro
+# at the start of this file.
+
+
+########################################
+# EXP1 / EXP2 (display) pins
+########################################
+
+[board_pins]
+aliases:
+    # EXP1 header
+    EXP1_1=PE8, EXP1_2=PE7,
+    EXP1_3=PE9, EXP1_4=PE10,
+    EXP1_5=PE12, EXP1_6=PE13,    # Slot in the socket on this side
+    EXP1_7=PE14, EXP1_8=PE15,
+    EXP1_9=<GND>, EXP1_10=<5V>,
+
+    # EXP2 header
+    EXP2_1=PA6, EXP2_2=PA5,
+    EXP2_3=PB1, EXP2_4=PA4,
+    EXP2_5=PB2, EXP2_6=PA7,      # Slot in the socket on this side
+    EXP2_7=PC15, EXP2_8=<RST>,
+    EXP2_9=<GND>, EXP2_10=<5V>
+
+[output_pin beeper]
+pin: EXP1_1
+
+[display]
+lcd_type: st7920
+cs_pin: EXP1_7
+sclk_pin: EXP1_6
+sid_pin: EXP1_8
+encoder_pins: ^EXP1_5, ^EXP1_3
+click_pin: ^!EXP1_2
+
+#########################
+# TMC2209 configuration #
+#########################
+
+[tmc2209 stepper_x]
+uart_pin: PC4
+interpolate: false
+run_current: 0.8
+sense_resistor: 0.110
+stealthchop_threshold: 0
+
+
+[tmc2209 stepper_y]
+uart_pin: PD11
+interpolate: false
+run_current: 0.8
+sense_resistor: 0.110
+stealthchop_threshold: 0
+
+[tmc2209 stepper_z]
+# DRIVER2
+uart_pin: PC6
+interpolate: False
+run_current: 0.6
+sense_resistor: 0.110
+stealthchop_threshold: 999999
+
+[tmc2209 extruder]
+# DRIVER3
+uart_pin: PC7
+interpolate: false
+run_current: 0.6
+sense_resistor: 0.110
+stealthchop_threshold: 999999
+
+#[tmc2209 extruder1]
+#uart_pin: PF2 # DRIVER4
+#run_current: 0.800
+#hold_current: 0.800
+#diag_pin: PG12 # DIAG4
+#stealthchop_threshold: 999999
+
+#[tmc2208 extruder2]
+#uart_pin: PE4
+#run_current: 0.800
+#hold_current: 0.800
+#diag_pin: PG13 # DIAG5
+#stealthchop_threshold: 999999
+
+#[tmc2208 extruder3]
+#uart_pin: PE1
+#run_current: 0.800
+#hold_current: 0.800
+#diag_pin: PG14 # DIAG6
+#stealthchop_threshold: 999999
+
+#[tmc2208 extruder4]
+#uart_pin: PD3
+#run_current: 0.800
+#hold_current: 0.800
+#diag_pin: PG15 # DIAG7
+#stealthchop_threshold: 999999
+
+#########################
+# BLTouch configuration #
+#########################
+
+[safe_z_home]
+home_xy_position: 113.65, 121.25
+speed: 100
+z_hop: 10
+z_hop_speed: 5
+
+[probe]
+##  Inductive Probe
+##  This probe is not used for Z height, only Quad Gantry Leveling
+
+# Select the probe port by type:
+## For the PROBE port. Will not work with Diode. May need pull-up resistor from signal to 24V.
+#pin: ~!PB7
+## For the DIAG_7 port. NEEDS BAT85 DIODE! Change to !PG15 if probe is NO.
+pin: !PG15
+## For Octopus Pro Probe port; NPN and PNP proximity switch types can be set by jumper
+#in: ~!PG15
+x_offset: 0
+y_offset: 19.75
+z_offset: 6.42
+speed: 10.0
+samples: 3
+samples_result: median
+sample_retract_dist: 3.0
+samples_tolerance: 0.006
+samples_tolerance_retries: 3
+
+[bed_mesh]                              # enable for BLTouch
+speed: 100
+mesh_min: 10, 25
+mesh_max: 232.8, 247
+algorithm: bicubic
+probe_count: 6,6
+
+#[firmware_retraction]
+#retract_length: 3.5
+#   The length of filament (in mm) to retract when G10 is activated,
+#   and to unretract when G11 is activated (but see
+#   unretract_extra_length below). The default is 0 mm.
+#retract_speed: 20
+#   The speed of retraction, in mm/s. The default is 20 mm/s.
+#unretract_extra_length: 0
+#   The length (in mm) of *additional* filament to add when
+#   unretracting.
+#unretract_speed: 10
+#   The speed of unretraction, in mm/s. The default is 10 mm/s.
+
+[gcode_arcs]
+
+[virtual_sdcard]
+path: ~/gcode_files
+
+[display_status]
+
+[pause_resume]
+
+[respond]
+default_type: command 
+
+[include timelapse.cfg]
+
+[include macro.cfg]
+
+#include Temp_color.cfg]
+
+[gcode_macro TIMELAPSE_TAKE_FRAME]
+gcode:
+  G10
+  SAVE_GCODE_STATE NAME=SNAPSHOT
+  G1 X175.0 F10000
+  G1 Y100.0 F10000
+  G4 P500 ;dwell
+  M400    ;clear buffer
+  TIMELAPSE_NEW_FRAME
+  G4 P250 ;moar dwelling
+  M400
+  RESTORE_GCODE_STATE NAME=SNAPSHOT MOVE=1
+  G11
+  
+
+[gcode_macro TIMELAPSE_RENDER]
+gcode:
+  {action_call_remote_method("timelapse_render")}
+
+[gcode_macro TOGGLE_LEDLIGHTS]
+gcode:
+  SET_PIN PIN=pb0 VALUE={(not printer['output_pin LEDlights'].value)|int}
+
+#[delayed_gcode set_temeperature_leds]
+#initial_duration: 1
+#gcode:
+#     SET_TEMPERATURE_LED LED=bed_light SENSOR=heater_bed
+#     SET_TEMPERATURE_LED LED=sb_leds INDEX=1 SENSOR=extruder
+
+[respond]
+default_type: command 
+
+[input_shaper]
+#shaper_freq_x: 93.6
+#shaper_type_x: mzv
+#shaper_freq_y: 58.8
+#shaper_type_y: mzv
+
+[mcu rpi]
+serial: /tmp/klipper_host_mcu
+
+#[include adxl.cfg]
+
+[input_shaper]
+#shaper_freq_x: 107.8
+#shaper_type_x: zv
+#shaper_freq_y: 57.4
+#shaper_type_y: mzv
+
+[gcode_macro _bot_data]
+variable_lapse_video_size: 0
+variable_lapse_filename: 'None'
+variable_lapse_path: 'None'
+gcode:
+    M118 Setting bot lapse variables
+
+[exclude_object]
+
+[idle_timeout]
+timeout: 3600
+
+#[firmware_retraction]
+#retract_length: .5
+#retract_speed: 30
+#unretract_extra_length: 0
+#unretract_speed: 30
+
+#*# <---------------------- SAVE_CONFIG ---------------------->
+#*# DO NOT EDIT THIS BLOCK OR BELOW. The contents are auto-generated.
+#*#
+#*# [heater_bed]
+#*# control = pid
+#*# pid_kp = 68.119
+#*# pid_ki = 0.770
+#*# pid_kd = 1507.140
+#*#
+#*# [extruder]
+#*# control = pid
+#*# pid_kp = 38.386
+#*# pid_ki = 6.562
+#*# pid_kd = 56.139
+#*#
+#*# [probe]
+#*# z_offset = 1.430
+#*#
+#*# [input_shaper]
+#*# shaper_type_x = mzv
+#*# shaper_freq_x = 69.4
+#*# shaper_type_y = 2hump_ei
+#*# shaper_freq_y = 68.8
+#*#
+#*# [bed_mesh default]
+#*# version = 1
+#*# points =
+#*# 	  0.112500, 0.090000, 0.050000, 0.037500, 0.062500, 0.077500
+#*# 	  0.125000, 0.092500, 0.042500, 0.030000, 0.055000, 0.077500
+#*# 	  0.135000, 0.080000, 0.017500, 0.007500, 0.045000, 0.077500
+#*# 	  0.132500, 0.067500, 0.017500, -0.007500, 0.037500, 0.097500
+#*# 	  0.132500, 0.045000, -0.020000, -0.017500, 0.032500, 0.110000
+#*# 	  0.140000, 0.040000, -0.030000, -0.030000, 0.017500, 0.135000
+#*# tension = 0.2
+#*# min_x = 10.0
+#*# algo = bicubic
+#*# y_count = 6
+#*# mesh_y_pps = 2
+#*# min_y = 25.0
+#*# x_count = 6
+#*# max_y = 247.0
+#*# mesh_x_pps = 2
+#*# max_x = 232.8
